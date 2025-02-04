@@ -1,0 +1,16 @@
+{
+    "trip_id": "t012345",
+    "user_id": "u888888",
+    "title": "Seoul K-Pop Tour",
+    "start_date": "2026-03-10",
+    "end_date": "2026-03-17",
+    "description": "Exploring Seoul's K-Pop culture",
+    "country": "South Korea",
+    "region": "Seoul",
+    "travel_type": "K-Pop tour",
+    "budget": 3200000,
+    "transportation_type": "bus",
+    "status": "booked",
+    "privacy_level": "private",
+    "created_at": "2026-02-10T10:00:00+09:00"
+}

@@ -1,0 +1,16 @@
+{
+    "user_id": "u789012",
+    "username": "engineer_jin",
+    "email": "jin@example.com",
+    "password_hash": "hashed_password_8",
+    "name": "진엔지니어",
+    "gender": "female",
+    "birth_date": "1991-02-28",
+    "nationality": "France",
+    "profile_image_url": "https://example.com/profile/jin.jpg",
+    "preferred_language": "fr",
+    "phone_number": "+33-123-456-7890",
+    "is_verified": true,
+    "created_at": "2025-01-25T00:00:00+09:00",
+    "status": "active"
+}

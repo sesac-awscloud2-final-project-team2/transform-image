@@ -1,0 +1,38 @@
+{
+  "experience_id": "e246810",
+  "user_id": "u123456",
+  "trip_id": "t987654",
+  "experience_type": "tourism",
+  "experience_name": "센소지 템플 방문",
+  "rating": 4.5,
+  "review": "아사쿠사의 유명한 불교 사원. 전통적인 일본 건축과 분위기를 느낄 수 있었다.",
+  "price": 1000,
+  "currency": "JPY",
+  "experience_date": "2025-02-02",
+  "details": {
+    "duration": "2 hours",
+    "crowd_level": "moderate"
+  },
+  "place": {
+    "place_name": "센소지 템플",
+    "address": "2 Chome-3-1 Asakusa, Taito City, Tokyo 111-0032, Japan",
+    "latitude": 35.7147,
+    "longitude": 139.7967,
+    "country": "Japan",
+    "city": "Tokyo",
+    "category": "historical_site",
+    "accessibility": "easy"
+  },
+  "photo": {
+    "file_name": "sensoji_temple.jpg",
+    "file_path": "/uploads/u123456/sensoji_temple.jpg",
+    "file_size": 2048000,
+    "file_type": "image/jpeg",
+    "caption": "센소지 템플의 웅장한 카미나리몬",
+    "photo_latitude": 35.7147,
+    "photo_longitude": 139.7967,
+    "taken_at": "2025-02-02T10:30:00+09:00",
+    "is_public": true
+  },
+  "created_at": "2025-02-02T10:45:00+09:00"
+}
