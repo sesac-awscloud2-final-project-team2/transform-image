@@ -2,9 +2,12 @@
 join으로 저장된 user 데이터를 불러와서 rdb로 저장
 '''
 from rds import RDSManager
+from utils import load_json, get_secret
+secrets = get_secret()
+DB_ID = secrets['DB_ID']
+DB_SECRET_NAME = secrets['DB_SECRET_NAME']
 
-from __config__ import USER_COLS, DB_ID, DB_SECRET_NAME
-
+USER_COLS = load_json('db-table-columns/users.json')
 
 def insert_join_user(user_dict):
     table_name = 'users'

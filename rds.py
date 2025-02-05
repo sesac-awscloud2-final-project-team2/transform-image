@@ -1,8 +1,6 @@
 """
 rds 불러오고 종료하는 클래스
 """
-
-
 import boto3
 import json
 from botocore.exceptions import ClientError
