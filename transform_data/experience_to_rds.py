@@ -2,7 +2,7 @@
 experience으로 저장된 experience 데이터를 불러와서 rdb로 저장
 '''
 import json
-from rds import RDSManager
+from rds_manager import RDSManager
 from utils import load_json, get_secret, get_current_datetime
 secrets = get_secret()
 DB_ID = secrets['DB_ID']

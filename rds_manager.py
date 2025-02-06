@@ -7,12 +7,13 @@ from botocore.exceptions import ClientError
 import psycopg2
 
 class RDSManager:
-    def __init__(self, db_id, secret_name, region_name="ap-northeast-2", is_proxy:bool='True'):
+    def __init__(self, db_id, secret_name, is_proxy:bool=True, region_name="ap-northeast-2", db_name=''):
         self.session = boto3.session.Session()
         self.region_name = region_name
         self.db_id = db_id
         self.secret_name = secret_name
         self.is_proxy = is_proxy
+        self.db_name = db_name
 
     def get_rds_info(self) -> dict:
         rds_client = self.session.client('rds')
@@ -27,7 +28,7 @@ class RDSManager:
 
             info_dict['db_host'] = db_instance['Endpoint']['Address']
             info_dict['port'] = db_instance['Endpoint']['Port']
-            info_dict['db_name'] = db_instance['DBName']
+            info_dict['db_name'] = db_instance['DBName'] if self.db_name == '' else self.db_name
 
         return info_dict
 
@@ -107,6 +108,20 @@ class RDSManager:
     def insert_data(self, insert_cols, insert_dict, table_name):
         insert_query = self.call_insert_query(table_name, insert_cols)
         insert_values = [insert_dict.get(column) for column in insert_cols]
+        self.execute_query(insert_query, insert_values)
+
+    def call_update_query(self, table_name, columns, filter_col, filter_val):
+        set_clause = ', '.join([f"{col} = %s" for col in columns])
+        update_query = f"""
+        UPDATE {table_name}
+        SET {set_clause}
+        WHERE {filter_col} = {filter_val}
+        """
+        return update_query
+
+    def update_data(self, update_cols, update_dict, filter_col, filter_val, table_name):
+        insert_query = self.call_update_query(table_name, update_cols, filter_col, filter_val)
+        insert_values = [update_dict.get(column) for column in update_cols]
         self.execute_query(insert_query, insert_values)
 
     def call_select_last_id_query(self, table_name, id_col):
