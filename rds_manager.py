@@ -115,7 +115,7 @@ class RDSManager:
         update_query = f"""
         UPDATE {table_name}
         SET {set_clause}
-        WHERE {filter_col} = {filter_val}
+        WHERE {filter_col} = '{filter_val}'
         """
         return update_query
 
