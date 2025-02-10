@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     echo '도커 이미지 빌드를 시작합니다.'
-                    sh "docker image build --platform linux/amd64 --build-arg DYNAMO_TABLE_NAME=${DYNAMO_TABLE_NAME} BATCH=${BATCH} -t ${IMAGE_REPO_NAME}:${IMAGE_TAG} ."
+                    sh "docker image build --platform linux/amd64 --build-arg -t ${IMAGE_REPO_NAME}:${IMAGE_TAG} ."
                     echo '도커 이미지 빌드가 완료되었습니다.'
                 }
             }
