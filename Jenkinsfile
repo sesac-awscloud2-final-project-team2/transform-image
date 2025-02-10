@@ -103,7 +103,7 @@ pipeline {
                     }
                 }
                 sh """
-                sed -i 's|image: ${REPOSITORY_URI}:.*|image: ${REPOSITORY_URI}:${IMAGE_TAG}|' ${ARGO_GITHUB_REPO}/collector/collector-deployment.yaml
+                sed -i 's|image: ${REPOSITORY_URI}:.*|image: ${REPOSITORY_URI}:${IMAGE_TAG}|' ${ARGO_GITHUB_REPO}/${IMAGE_REPO_NAME}/${IMAGE_REPO_NAME}-deployment.yaml
                 """
                 echo 'ArgoCD repo에 있는 YAML 파일 태그가 수정되었습니다.'
             }
