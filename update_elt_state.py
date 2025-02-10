@@ -3,6 +3,9 @@
 LOG_COLS = ['start_id', 'end_id', 'status']
 DB_NAME = 'loggingdb'
 
+from transform_data.tfm_logger import CustomLogger
+logger = CustomLogger('transform')
+
 from rds_manager import RDSManager
 from utils import get_secret
 
@@ -22,6 +25,7 @@ class ETLStateController:
         return last_end_id
     
     def start_etl_state(self, batch=100):
+        start_time = logger.start('start_etl_state')
         last_end_id = self.load_last_end_id()
         if last_end_id == None:
             last_end_id = self.raw_table_name[0] + '0'
@@ -33,10 +37,12 @@ class ETLStateController:
         }
         with self.rds_manager:
             self.rds_manager.insert_data(LOG_COLS, insert_dict, self.table_name)
-        print(insert_dict)
+        logger.rds_operation('insert', self.table_name, 1, start_time)
+        logger.finish('start_etl_state')
         return start_id
 
     def update_etl_state(self, start_id, end_id, status):
+        start_time = logger.start('update_etl_state')
         update_dict = {
             'end_id':end_id,
             'status':status
@@ -44,9 +50,11 @@ class ETLStateController:
         with self.rds_manager:
             self.rds_manager.update_data(update_dict.keys(), update_dict, 'start_id', start_id, self.table_name)
         update_dict['start_id'] = start_id
-        print(update_dict)
+        logger.rds_operation('update', self.table_name, 1, start_time)
+        logger.finish('update_etl_state')
 
     def insert_fail_state(self, fail_id):
+        start_time = logger.start('insert_fail_state')
         fail_info_dict = {
             'start_id':fail_id,
             'end_id':fail_id,
@@ -54,4 +62,5 @@ class ETLStateController:
         }
         with self.rds_manager:
             self.rds_manager.insert_data(LOG_COLS, fail_info_dict, self.table_name)
-            print(fail_info_dict)
+        logger.rds_operation('insert', self.table_name, 1, start_time)
+        logger.finish('insert_fail_state')
