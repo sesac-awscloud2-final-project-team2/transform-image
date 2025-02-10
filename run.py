@@ -11,34 +11,33 @@ from transform_data import load_insert_function
 
 # 인자 파서 설정
 parser = argparse.ArgumentParser(description='ETL 프로세스 실행')
-parser.add_argument('table', type=str, help='테이블 이름')
 parser.add_argument('batch_count', type=int, nargs='?', default=1, help='진행 건수 (기본값: 1)')  # 기본값 1
 
 args = parser.parse_args()  # 인자 파싱
 
-table_name = args.table
+tables = ['user', 'trip', 'experience']
 batch = args.batch_count
 
-# ETLStateController에 인자 전달
-etl_state_ctl = ETLStateController(args.table)
-start_id = etl_state_ctl.start_etl_state(batch)
+for table_name in tables:
+    etl_state_ctl = ETLStateController(args.table)
+    start_id = etl_state_ctl.start_etl_state(batch)
 
-code = start_id[0]
-id_start_num = int(start_id[1:])
-id_end_num = id_start_num+batch
+    code = start_id[0]
+    id_start_num = int(start_id[1:])
+    id_end_num = id_start_num+batch
 
-for id_num in range(id_start_num, id_end_num):
-    idx = code + str(id_num)
-    data_dict = get_dynamo_data(table_name, idx)
+    for id_num in range(id_start_num, id_end_num):
+        idx = code + str(id_num)
+        data_dict = get_dynamo_data(table_name, idx)
 
-    if len(data_dict) == 0:
-        break
-    
-    try:
-        insert_func = load_insert_function(table_name)
-        insert_func(data_dict)
-    except Exception as e:
-        etl_state_ctl.insert_fail_state(idx)
-        continue
+        if len(data_dict) == 0:
+            break
+        
+        try:
+            insert_func = load_insert_function(table_name)
+            insert_func(data_dict)
+        except Exception as e:
+            etl_state_ctl.insert_fail_state(idx)
+            continue
 
-etl_state_ctl.update_etl_state(start_id, idx, 'finished')
+    etl_state_ctl.update_etl_state(start_id, idx, 'finished')
