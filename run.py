@@ -16,10 +16,10 @@ parser.add_argument('batch_count', type=int, nargs='?', default=1, help='진행 
 args = parser.parse_args()  # 인자 파싱
 
 tables = ['user', 'trip', 'experience']
-batch = args.batch_count
+batch = int(args.batch_count)
 
 for table_name in tables:
-    etl_state_ctl = ETLStateController(args.table)
+    etl_state_ctl = ETLStateController(table_name)
     start_id = etl_state_ctl.start_etl_state(batch)
 
     code = start_id[0]

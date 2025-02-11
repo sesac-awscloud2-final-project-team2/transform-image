@@ -1,7 +1,7 @@
 '''
 trip으로 저장된 trip 데이터를 불러와서 rdb로 저장
 '''
-from tfm_logger import CustomLogger
+from transform_data.tfm_logger import CustomLogger
 logger = CustomLogger('transform')
 
 from rds_manager import RDSManager

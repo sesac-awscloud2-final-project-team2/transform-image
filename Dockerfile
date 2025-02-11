@@ -15,8 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 앱 복사
 COPY . .
 
-# Flask 실행 포트
-EXPOSE 30002
-
-# Flask 서버 실행
-CMD ["python", "app.py", BATCH]
+CMD ["python", "run.py", "10"]

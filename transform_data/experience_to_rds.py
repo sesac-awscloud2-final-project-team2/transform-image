@@ -4,7 +4,7 @@ experience으로 저장된 experience 데이터를 불러와서 rdb로 저장
 import json
 from rds_manager import RDSManager
 from utils import load_json, get_secret, get_current_datetime
-from tfm_logger import CustomLogger
+from transform_data.tfm_logger import CustomLogger
 logger = CustomLogger('transform')
 
 secrets = get_secret()

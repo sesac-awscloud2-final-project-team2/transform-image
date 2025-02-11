@@ -16,7 +16,7 @@ class RDSManager:
         self.db_name = db_name
 
     def get_rds_info(self) -> dict:
-        rds_client = self.session.client('rds')
+        rds_client = self.session.client('rds', region_name=self.region_name)
         response = rds_client.describe_db_instances()
         
         info_dict = {}
