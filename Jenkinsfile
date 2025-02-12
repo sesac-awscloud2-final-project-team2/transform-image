@@ -100,8 +100,8 @@ pipeline {
         }
 
         stage('Upload DAG to S3') {
-            script {
-                steps {
+            steps {
+                script {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${CREDENTIAL_ID}"]]) {
                         sh "aws s3 cp transform_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
                     }
