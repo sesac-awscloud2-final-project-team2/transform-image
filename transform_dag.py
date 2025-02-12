@@ -33,7 +33,7 @@ kube_config_path = '/usr/local/airflow/dags/kube_config.yaml'
 
 joinPodRun = KubernetesPodOperator(
                        namespace="mwaa",
-                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
+                       image=f"transform:aa", #390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
                        cmds=["/bin/bash", "-c"],
                        arguments=["python", "run.py", "join", "10"],
                        labels={"role": "transform"}, # k8s 식별용 라벨
@@ -47,36 +47,36 @@ joinPodRun = KubernetesPodOperator(
                        cluster_context='aws'
                        )
 
-# tripPodRun = KubernetesPodOperator(
-#                        namespace="mwaa",
-#                        image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
-#                        cmds=["/bin/bash", "-c"],
-#                        arguments=["python", "run.py", "trip", "10"],
-#                        labels={"role": "transform"}, # k8s 식별용 라벨
-#                        name="transform-trip",
-#                        task_id="transform-trip",
-#                        get_logs=True,
-#                        dag=dag,
-#                        is_delete_operator_pod=False,
-#                        config_file=kube_config_path,
-#                        in_cluster=False,
-#                        cluster_context='aws'
-#                        )
+tripPodRun = KubernetesPodOperator(
+                       namespace="mwaa",
+                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
+                       cmds=["/bin/bash", "-c"],
+                       arguments=["python", "run.py", "trip", "10"],
+                       labels={"role": "transform"}, # k8s 식별용 라벨
+                       name="transform-trip",
+                       task_id="transform-trip",
+                       get_logs=True,
+                       dag=dag,
+                       is_delete_operator_pod=False,
+                       config_file=kube_config_path,
+                       in_cluster=False,
+                       cluster_context='aws'
+                       )
 
-# experiecnePodRun = KubernetesPodOperator(
-#                        namespace="mwaa",
-#                        image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
-#                        cmds=["/bin/bash", "-c"],
-#                        arguments=["python", "run.py", "experience", "10"],
-#                        labels={"role": "transform"}, # k8s 식별용 라벨
-#                        name="transform-experiecne",
-#                        task_id="transform-experience",
-#                        get_logs=True,
-#                        dag=dag,
-#                        is_delete_operator_pod=False,
-#                        config_file=kube_config_path,
-#                        in_cluster=False,
-#                        cluster_context='aws'
-#                        )
+experiecnePodRun = KubernetesPodOperator(
+                       namespace="mwaa",
+                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
+                       cmds=["/bin/bash", "-c"],
+                       arguments=["python", "run.py", "experience", "10"],
+                       labels={"role": "transform"}, # k8s 식별용 라벨
+                       name="transform-experiecne",
+                       task_id="transform-experience",
+                       get_logs=True,
+                       dag=dag,
+                       is_delete_operator_pod=False,
+                       config_file=kube_config_path,
+                       in_cluster=False,
+                       cluster_context='aws'
+                       )
 
-# joinPodRun >> tripPodRun >> experiecnePodRun
+joinPodRun >> tripPodRun >> experiecnePodRun
