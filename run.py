@@ -51,7 +51,7 @@ for id_num in range(id_start_num, id_end_num):
     data_dict = get_dynamo_data(table_name, idx)
     request_duration.labels(prome_label+'_get-data').observe(time.time() - start_time) 
     if len(data_dict) == 0:
-        raise Exception("조회된 데이터 없음")
+        pass
     
     try:
         start_time = time.time()
