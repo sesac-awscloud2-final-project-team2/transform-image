@@ -33,7 +33,7 @@ kube_config_path = '/usr/local/airflow/dags/kube_config.yaml'
 
 joinPodRun = KubernetesPodOperator(
                        namespace="mwaa",
-                       image=f"transform:aa", #390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
+                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
                        cmds=["/bin/bash", "-c"],
                        arguments=["python", "run.py", "join", "10"],
                        labels={"role": "transform"}, # k8s 식별용 라벨

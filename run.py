@@ -18,7 +18,7 @@ parser.add_argument('batch_count', type=int, nargs='?', default=1, help='진행 
 
 args = parser.parse_args()  # 인자 파싱
 
-table_name = args.table_name
+table_name = 'user'#args.table_name
 batch = int(args.batch_count)
 
 
