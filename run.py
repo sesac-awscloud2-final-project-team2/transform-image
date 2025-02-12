@@ -13,7 +13,7 @@ import time
 
 # 인자 파서 설정
 parser = argparse.ArgumentParser(description='ETL 프로세스 실행')
-parser.add_argument('table_name', type=str, required=True)
+# parser.add_argument('table_name', type=str, required=True)
 parser.add_argument('batch_count', type=int, nargs='?', default=1, help='진행 건수 (기본값: 1)')  # 기본값 1
 
 args = parser.parse_args()  # 인자 파싱
