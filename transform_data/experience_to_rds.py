@@ -20,7 +20,7 @@ def insert_place_info(exp_dict):
     table_name = 'travel_places'
     start_time = logger.start('insert_place_info')
 
-    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=False)
+    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=True)
     
     filter_col = 'place_name'
     with rds_manager:
@@ -43,7 +43,7 @@ def insert_place_info(exp_dict):
 
     with rds_manager:
         rds_manager.insert_data(PLACE_COLS, place_dict, table_name)
-    logger.rds_operation('insert', table_name, 1, start_time)
+    logger.rds_operation("insert_place_info", 'insert', table_name, 1, start_time)
     logger.finish('insert_place_info')
 
     return new_id
@@ -54,7 +54,7 @@ def insert_photo_info(exp_dict, place_id):
     table_name = 'travel_photos'
 
     start_time = logger.start('insert_photo_info')
-    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=False)
+    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=True)
 
     filter_col = 'place_id'
     with rds_manager:
@@ -77,7 +77,7 @@ def insert_photo_info(exp_dict, place_id):
 
     with rds_manager:
         rds_manager.insert_data(PHOTO_COLS, photo_dict, table_name)
-    logger.rds_operation('insert', table_name, 1, start_time)
+    logger.rds_operation("insert_photo_info", 'insert', table_name, 1, start_time)
     logger.finish('insert_photo_info')
 
     return new_id
@@ -89,7 +89,7 @@ def insert_exp_info(exp_dict):
     photo_id = insert_photo_info(exp_dict, place_id)
 
     table_name = 'travel_experiences'
-    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=False)
+    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=True)
 
     exp_dict['place_id'] = place_id
     exp_dict['photo_id'] = photo_id
@@ -98,5 +98,5 @@ def insert_exp_info(exp_dict):
 
     with rds_manager:
         rds_manager.insert_data(EXP_COLS, exp_dict, table_name)
-    logger.rds_operation('insert', table_name, 1, start_time)
+    logger.rds_operation("insert_exp_info", 'insert', table_name, 1, start_time)
     logger.finish('insert_exp_info')

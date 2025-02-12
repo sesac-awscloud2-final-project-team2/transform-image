@@ -15,8 +15,8 @@ USER_COLS = load_json('db-table-columns/users.json')
 def insert_join_user(user_dict):
     table_name = 'users'
     start_time = logger.start('insert_join_user')
-    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=False)
+    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=True)
     with rds_manager:
         rds_manager.insert_data(USER_COLS, user_dict, table_name)
-    logger.rds_operation('insert', table_name, 1, start_time)
+    logger.rds_operation("insert_join_user", 'insert', table_name, 1, start_time)
     logger.finish('insert_join_user')

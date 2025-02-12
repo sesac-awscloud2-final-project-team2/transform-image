@@ -24,28 +24,27 @@ class CustomLogger:
     def finish(self, function_name):
         self.logger.info(f"Function {function_name} finished")
 
-    def api_call(self, endpoint, method, status_code, response_time):
-        self.logger.info(f"API Call: {method} {endpoint} - Status: {status_code} - Response Time: {response_time}ms")
+    def api_call(self, func_name, endpoint, method, status_code, response_time):
+        self.logger.info(f"API Call: {method} {endpoint} - Status: {status_code} - Response Time: {response_time}ms - func_name: {func_name}")
 
-    def dynamodb_operation(self, operation, table, items_affected, start_time):
+    def dynamodb_operation(self, func_name, operation, table, items_affected, start_time):
         duration = datetime.now() - start_time
-        self.logger.info(f"DynamoDB: {operation} on {table} - Items affected: {items_affected} - Duration: {duration}ms")
+        self.logger.info(f"DynamoDB: {operation} on {table} - Items affected: {items_affected} - Duration: {duration}ms - func_name: {func_name}")
 
-    def rds_operation(self, operation, database, items_affected, start_time):
+    def rds_operation(self, func_name, operation, database, items_affected, start_time):
         duration = datetime.now() - start_time
-        self.logger.info(f"RDS: {operation} on {database} - Items affected: {items_affected} - Duration: {duration}ms")
+        self.logger.info(f"RDS: {operation} on {database} - Items affected: {items_affected} - Duration: {duration}ms - func_name: {func_name}")
         
-    def data_processing(self, data_type, count, start_time):
+    def data_processing(self, func_name, data_type, count, start_time):
         duration = datetime.now() - start_time
-        self.logger.info(f"Data Processing: {data_type} - Count: {count} - Duration: {duration}ms")
+        self.logger.info(f"Data Processing: {data_type} - Count: {count} - Duration: {duration}ms - func_name: {func_name}")
 
-    def error(self, message, exc_info=True):
-        self.logger.error(message, exc_info=exc_info)
+    def error(self, func_name, message, exc_info=True):
+        self.logger.error(f"func_name: {func_name} - error_msg: {message}", exc_info=exc_info)
 
-    def warning(self, message):
-        self.logger.warning(message)
+    def warning(self, func_name, message):
+        self.logger.warning(f"func_name: {func_name} - warning_msg: {message}", )
 
-    def debug(self, message):
-        self.logger.debug(message)
+
 
 

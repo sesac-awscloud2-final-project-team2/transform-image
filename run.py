@@ -37,7 +37,7 @@ for table_name in tables:
             insert_func = load_insert_function(table_name)
             insert_func(data_dict)
         except Exception as e:
-            etl_state_ctl.insert_fail_state(idx)
+            etl_state_ctl.insert_fail_state("load_insert_function", idx)
             continue
 
     etl_state_ctl.update_etl_state(start_id, idx, 'finished')
