@@ -1,7 +1,7 @@
 '''
 trip으로 저장된 trip 데이터를 불러와서 rdb로 저장
 '''
-from tfm_logger import CustomLogger
+from transform_data.tfm_logger import CustomLogger
 logger = CustomLogger('transform')
 
 from rds_manager import RDSManager
@@ -16,8 +16,8 @@ def insert_trip_log(trip_dict):
     table_name = 'travel'
     trip_dict['experience_ids'] = ''
     start_time = logger.start('insert_trip_log')
-    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=False)
+    rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=True)
     with rds_manager:
         rds_manager.insert_data(TRIP_COLS, trip_dict, table_name)
-    logger.rds_operation('insert', table_name, 1, start_time)
+    logger.rds_operation("insert_trip_log", 'insert', table_name, 1, start_time)
     logger.finish('insert_trip_log')
