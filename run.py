@@ -8,7 +8,7 @@ import argparse  # argparse 모듈 추가
 from load_dynamodb import get_dynamo_data
 from update_elt_state import ETLStateController
 from transform_data import load_insert_function
-from prometheus_client import Counter, Histogram
+# from prometheus_client import Counter, Histogram
 import time
 
 # 인자 파서 설정
@@ -22,17 +22,17 @@ table_name = args.table_name
 batch = int(args.batch_count)
 
 
-# 요청 횟수를 측정하는 Counter 정의
-request_counter = Counter(
-    'by_path_counter', 'Request count by request paths',
-    ['path']
-)
+# # 요청 횟수를 측정하는 Counter 정의
+# request_counter = Counter(
+#     'by_path_counter', 'Request count by request paths',
+#     ['path']
+# )
 
-# 요청 처리 시간을 측정하는 Histogram 정의
-request_duration = Histogram(
-    'http_request_duration_seconds', 'Request processing time',
-    ['path']
-)
+# # 요청 처리 시간을 측정하는 Histogram 정의
+# request_duration = Histogram(
+#     'http_request_duration_seconds', 'Request processing time',
+#     ['path']
+# )
 
 
 # for table_name in tables:
@@ -49,7 +49,7 @@ for id_num in range(id_start_num, id_end_num):
 
     start_time = time.time()
     data_dict = get_dynamo_data(table_name, idx)
-    request_duration.labels(prome_label+'_get-data').observe(time.time() - start_time) 
+    # request_duration.labels(prome_label+'_get-data').observe(time.time() - start_time) 
     if len(data_dict) == 0:
         raise Exception("조회된 데이터 없음")
     
@@ -57,8 +57,8 @@ for id_num in range(id_start_num, id_end_num):
         start_time = time.time()
         insert_func = load_insert_function(table_name)
         insert_func(data_dict)
-        request_duration.labels(prome_label+'_insert-data').observe(time.time() - start_time) 
-        request_counter.labels(prome_label).inc()
+        # request_duration.labels(prome_label+'_insert-data').observe(time.time() - start_time) 
+        # request_counter.labels(prome_label).inc()
     except Exception as e:
         etl_state_ctl.insert_fail_state("load_insert_function", idx)
         continue
