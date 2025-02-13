@@ -1,3 +1,7 @@
+'''
+데이터 송수신을 확인하기 위한 api (develop)
+'''
+
 from flask import Flask, request, jsonify
 from transform_data.join_to_rdb import insert_join_user
 from transform_data.trip_to_rds import insert_trip_log

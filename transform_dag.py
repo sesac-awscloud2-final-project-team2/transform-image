@@ -14,7 +14,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
 TAG_VERSION = ""
 
@@ -25,58 +25,34 @@ default_args = {
    'provide_context': True
 }
 
-dag = DAG(
-   'transform_k8s', default_args=default_args, schedule_interval=None)
-
 #use a kube_config stored in s3 dags folder for now
 kube_config_path = '/usr/local/airflow/dags/kube_config.yaml'
 
-joinPodRun = KubernetesPodOperator(
-                       namespace="mwaa",
-                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
-                       cmds=["/bin/bash", "-c"],
-                       arguments=["python run.py join 10"],
-                       labels={"role": "transform"}, # k8s 식별용 라벨
-                       name="transform-join",
-                       task_id="transform-join",
-                       get_logs=True,
-                       dag=dag,
-                       is_delete_operator_pod=False,
-                       config_file=kube_config_path,
-                       in_cluster=False,
-                       cluster_context='aws'
-                       )
+def get_running_pod(table_name, batch=10):
+   PodRun = KubernetesPodOperator(
+                        namespace="mwaa",
+                        image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
+                        cmds=["/bin/bash", "-c"],
+                        arguments=["python run.py --table_name={{ params.table_name }} --batch={{ params.batch }}"],
+                        labels={"role": "transform"}, # k8s 식별용 라벨
+                        name=f"transform-{table_name}",
+                        task_id=f"transform-{table_name}",
+                        get_logs=True,
+                        dag=dag,
+                        is_delete_operator_pod=False,
+                        config_file=kube_config_path,
+                        in_cluster=False,
+                        cluster_context='aws',
+                        params={
+                              'batch': batch,
+                              'table_name': table_name
+                           }
+                        )
+   return PodRun
 
-tripPodRun = KubernetesPodOperator(
-                       namespace="mwaa",
-                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
-                       cmds=["/bin/bash", "-c"],
-                       arguments=["python run.py trip 10"],
-                       labels={"role": "transform"}, # k8s 식별용 라벨
-                       name="transform-trip",
-                       task_id="transform-trip",
-                       get_logs=True,
-                       dag=dag,
-                       is_delete_operator_pod=False,
-                       config_file=kube_config_path,
-                       in_cluster=False,
-                       cluster_context='aws'
-                       )
+with DAG('transform_dynamo_to_rds', default_args=default_args, schedule_interval=None) as dag:
+   joinPodRun = get_running_pod('user')
+   tripPodRun = get_running_pod('trip')
+   experiecnePodRun = get_running_pod('experience')
 
-experiecnePodRun = KubernetesPodOperator(
-                       namespace="mwaa",
-                       image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
-                       cmds=["/bin/bash", "-c"],
-                       arguments=["python run.py experiecne 10"],
-                       labels={"role": "transform"}, # k8s 식별용 라벨
-                       name="transform-experiecne",
-                       task_id="transform-experience",
-                       get_logs=True,
-                       dag=dag,
-                       is_delete_operator_pod=False,
-                       config_file=kube_config_path,
-                       in_cluster=False,
-                       cluster_context='aws'
-                       )
-
-joinPodRun >> tripPodRun >> experiecnePodRun
+   joinPodRun >> tripPodRun >> experiecnePodRun
