@@ -35,8 +35,8 @@ def get_running_pod(table_name, batch=10):
                         cmds=["/bin/bash", "-c"],
                         arguments=["python run.py --table_name={{ params.table_name }} --batch={{ params.batch }}"],
                         labels={"role": "transform"}, # k8s 식별용 라벨
-                        name="transform-trip",
-                        task_id="transform-trip",
+                        name=f"transform-{table_name}",
+                        task_id=f"transform-{table_name}",
                         get_logs=True,
                         dag=dag,
                         is_delete_operator_pod=False,
