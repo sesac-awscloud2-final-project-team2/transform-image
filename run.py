@@ -13,13 +13,13 @@ import time
 
 # 인자 파서 설정
 parser = argparse.ArgumentParser(description='ETL 프로세스 실행')
-# parser.add_argument('table_name', type=str, required=True)
-parser.add_argument('batch_count', type=int, nargs='?', default=10, help='진행 건수 (기본값: 1)')  # 기본값 1
+parser.add_argument('table_name', type=str, required=True)
+parser.add_argument('batch', type=int, nargs='?', default=10, help='진행 건수 (기본값: 1)')  # 기본값 1
 
 args = parser.parse_args()  # 인자 파싱
 
-table_name = 'trip'#args.table_name
-batch = int(args.batch_count)
+table_name = args.table_name
+batch = int(args.batch)
 
 
 # 요청 횟수를 측정하는 Counter 정의

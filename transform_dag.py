@@ -14,7 +14,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
 TAG_VERSION = ""
 
@@ -51,7 +51,7 @@ tripPodRun = KubernetesPodOperator(
                        namespace="mwaa",
                        image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
                        cmds=["/bin/bash", "-c"],
-                       arguments=["python run.py"],
+                       arguments=["python run.py {{ params.batch }} {{ params.table_name }}"],
                        labels={"role": "transform"}, # k8s 식별용 라벨
                        name="transform-trip",
                        task_id="transform-trip",
@@ -60,7 +60,11 @@ tripPodRun = KubernetesPodOperator(
                        is_delete_operator_pod=False,
                        config_file=kube_config_path,
                        in_cluster=False,
-                       cluster_context='aws'
+                       cluster_context='aws',
+                       params={
+                           'batch': '10',
+                           'table_name': 'user'
+                        }
                        )
 
 # experiecnePodRun = KubernetesPodOperator(
