@@ -7,7 +7,7 @@ from modules.custom_log.custom_logger import CustomLogger
 logger = CustomLogger('transform')
 
 from modules.rds_manager import RDSManager
-from utils import get_secret, get_current_datetime
+from modules.utils import get_secret, get_current_datetime
 
 secrets = get_secret()
 DB_ID = secrets['DB_ID']
