@@ -51,7 +51,7 @@ tripPodRun = KubernetesPodOperator(
                        namespace="mwaa",
                        image=f"390844761387.dkr.ecr.ap-northeast-2.amazonaws.com/transform:{TAG_VERSION}",
                        cmds=["/bin/bash", "-c"],
-                       arguments=["python run.py --table_name=={{ params.table_name }} --batch={{ params.batch }}"],
+                       arguments=["python run.py --table_name={{ params.table_name }} --batch={{ params.batch }}"],
                        labels={"role": "transform"}, # k8s 식별용 라벨
                        name="transform-trip",
                        task_id="transform-trip",
