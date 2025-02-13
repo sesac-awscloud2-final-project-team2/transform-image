@@ -7,11 +7,8 @@ from modules.custom_log.custom_logger import CustomLogger
 logger = CustomLogger('transform')
 
 from modules.rds_manager import RDSManager
-from modules.utils import get_secret, get_current_datetime
-
-secrets = get_secret()
-DB_ID = secrets['DB_ID']
-DB_SECRET_NAME = secrets['DB_SECRET_NAME']
+from modules.utils import get_current_datetime
+from modules.__config__ import DB_ID, DB_SECRET_NAME
 
 class ETLStateController:
     def __init__(self, raw_table_name, is_proxy=True) -> None:
