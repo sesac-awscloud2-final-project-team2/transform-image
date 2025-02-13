@@ -3,10 +3,10 @@
 LOG_COLS = ['start_id', 'end_id', 'status', 'created_at', 'updated_at']
 DB_NAME = 'loggingdb'
 
-from transform_data.tfm_logger import CustomLogger
+from modules.custom_log.custom_logger import CustomLogger
 logger = CustomLogger('transform')
 
-from rds_manager import RDSManager
+from modules.rds_manager import RDSManager
 from utils import get_secret, get_current_datetime
 
 secrets = get_secret()
