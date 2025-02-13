@@ -2,17 +2,14 @@
 experience으로 저장된 experience 데이터를 불러와서 rdb로 저장
 '''
 import json
-from rds_manager import RDSManager
-from modules.utils import load_json, get_secret, get_current_datetime
-from modules.custom_log.custom_logger import CustomLogger
+from modules.rds_manager import RDSManager
 
-secrets = get_secret()
-DB_ID = secrets['DB_ID']
-DB_SECRET_NAME = secrets['DB_SECRET_NAME']
+from modules.__config__ import DB_ID, DB_SECRET_NAME
+from modules.__config__ import EXP_COLS, PLACE_COLS, PHOTO_COLS
 
-PLACE_COLS = load_json('db-table-columns/travel_places.json')
-PHOTO_COLS = load_json('db-table-columns/travel_photos.json')
-EXP_COLS = load_json('db-table-columns/travel_experiences.json')
+from modules.utils import get_current_datetime
+# from modules.custom_log.custom_logger import CustomLogger
+
 
 def insert_place_info(exp_dict):
     place_dict = exp_dict['place']

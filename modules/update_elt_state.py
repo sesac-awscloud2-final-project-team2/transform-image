@@ -69,4 +69,3 @@ class ETLStateController:
         logger.rds_operation('insert_fail_state', 'insert', self.table_name, 1, start_time)
         logger.finish('insert_fail_state')
 
-# CREATE TABLE save_log_experience (id serial, start_id varchar(50), end_id varchar(50), status varchar(50), func_name varchar(100), created_at timestamp, updated_at timestamp, PRIMARY KEY (id));
