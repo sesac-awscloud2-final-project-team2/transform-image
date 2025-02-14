@@ -12,15 +12,11 @@ class ETLStateController:
         self.raw_table_name = raw_table_name
         self.table_name = 'save_log_'+raw_table_name
         self.rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=is_proxy, db_name=DB_NAME)
-    
-    def load_last_end_id(self):
-        with self.rds_manager:
-            last_end_id = self.rds_manager.select_last_id('end_id', self.table_name)
-        return last_end_id
+
     
     def start_etl_state(self, batch=100):
         with self.rds_manager:
-            last_end_id = self.load_last_end_id()
+            last_end_id = self.rds_manager.select_last_id('end_id', self.table_name)
             if last_end_id == None:
                 last_end_id = self.raw_table_name[0] + '0'
             start_id = last_end_id[0] + str(int(last_end_id[1:])+1)
