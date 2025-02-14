@@ -8,7 +8,6 @@ import time
 class CustomLogger:
     def __init__(self, name, log_dir='logs'):
         self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.DEBUG)
         if not self.logger.handlers:
             self.logger.setLevel(logging.DEBUG)
 
