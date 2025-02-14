@@ -11,8 +11,8 @@ class CustomLogger:
         self.logger.setLevel(logging.DEBUG)
 
         # 로그 디렉토리 생성
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+        # if not os.path.exists(log_dir):
+        #     os.makedirs(log_dir)
 
         # 콘솔 핸들러 설정
         ch = logging.StreamHandler()
@@ -20,16 +20,16 @@ class CustomLogger:
         console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         ch.setFormatter(console_formatter)
 
-        # 파일 핸들러 설정 (RotatingFileHandler 사용)
-        log_file = os.path.join(log_dir, f'{name}.log')
-        fh = RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5)
-        fh.setLevel(logging.DEBUG)
-        file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        fh.setFormatter(file_formatter)
+        # # 파일 핸들러 설정 (RotatingFileHandler 사용)
+        # log_file = os.path.join(log_dir, f'{name}.log')
+        # fh = RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5)
+        # fh.setLevel(logging.DEBUG)
+        # file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        # fh.setFormatter(file_formatter)
 
         # 핸들러 추가
         self.logger.addHandler(ch)
-        self.logger.addHandler(fh)
+        # self.logger.addHandler(fh)
 
     def _log_with_context(self, level, func_name, message, extra=None):
         log_data = {
