@@ -31,6 +31,7 @@ start_id = etl_state_ctl.start_etl_state(batch)
 code = start_id[0]
 id_start_num = int(start_id[1:])
 id_end_num = id_start_num+batch
+fail_cnt = 0
 
 for id_num in range(id_start_num, id_end_num):
     idx = code + str(id_num)
@@ -38,6 +39,8 @@ for id_num in range(id_start_num, id_end_num):
 
     data_dict = get_dynamo_data(table_name, idx)
     if len(data_dict) == 0:
+        etl_state_ctl.insert_fail_state("get_dynamo_data", idx)
+        fail_cnt += 1
         pass
     
     try:
@@ -49,4 +52,7 @@ for id_num in range(id_start_num, id_end_num):
         etl_state_ctl.insert_fail_state("load_insert_function", idx)
         continue
 
-etl_state_ctl.update_etl_state(start_id, idx, 'finished')
+if fail_cnt > 0:
+    etl_state_ctl.update_etl_state(start_id, idx, 'finished')
+else:
+    etl_state_ctl.update_etl_state(start_id, idx, 'check needed')

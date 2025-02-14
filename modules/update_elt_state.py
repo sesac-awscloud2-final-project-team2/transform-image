@@ -41,7 +41,6 @@ class ETLStateController:
 
     def insert_fail_state(self, func_name, fail_id):
         with self.rds_manager:
-
             fail_info_dict = {
                 'func_name':func_name,
                 'start_id':fail_id,
