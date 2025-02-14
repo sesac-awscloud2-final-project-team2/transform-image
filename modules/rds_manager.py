@@ -159,6 +159,7 @@ class RDSManager:
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
 
         if len(result) == 0:
+            logger.debug('select_last_id', f'{result}')
             last_id = None
         else:
             logger.debug('select_last_id', f'{result}')
