@@ -40,7 +40,7 @@ pipeline {
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         CREDENTIAL_ID = "ecr-credential"
         ARGO_GITHUB_REPO = "aws-argocd"
-        S3_BUCKET = "s3://airflow-travelog/dags/transform_dag.py"
+        S3_BUCKET = "s3://airflow-travelog/dags"
     }
     stages {
         stage('ECR Login') {
@@ -103,10 +103,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${CREDENTIAL_ID}"]]) {
-                        sh "aws s3 cp dags/tag_version ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
-                        sh "aws s3 cp dags/join_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
-                        sh "aws s3 cp dags/trip_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
-                        sh "aws s3 cp dags/experience_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/tag_version ${S3_BUCKET}/tag_version --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/join_dag.py ${S3_BUCKET}/join_dag.py --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/trip_dag.py ${S3_BUCKET}/trip_dag.py --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/experience_dag.py ${S3_BUCKET}/experience_dag.py --region ${AWS_DEFAULT_REGION}"
                     }
                     echo "DAG 파일을 S3에 업로드하였습니다."
                 }
