@@ -22,7 +22,7 @@ class ETLStateController:
             # last status가 'start'(다음거 실행), 'finished'(다음거 실행), 'check needed'(다시 실행)일 수 있음. 
             if last_status not in ['start', 'finished']:
                 start_id = last_end_id
-                self.update_etl_state(start_id, start_id[0] + str(int(start_id[1:])-1+batch), 'start')
+                self.update_etl_state(start_id, start_id[0] + str(int(start_id[1:])-1+batch), 'start', True)
             else:
                 start_id = last_end_id[0] + str(int(last_end_id[1:])+1)
                 insert_dict = {
@@ -34,14 +34,17 @@ class ETLStateController:
                 self.rds_manager.insert_data(LOG_COLS, insert_dict, self.table_name)
         return start_id
 
-    def update_etl_state(self, start_id, end_id, status):
+    def update_etl_state(self, start_id, end_id, status, not_close=False):
         update_dict = {
             'end_id':end_id,
             'status':status,
             'updated_at': get_current_datetime()
         }
-        with self.rds_manager:
+        if not_close:
             self.rds_manager.update_data(update_dict.keys(), update_dict, 'start_id', start_id, self.table_name)
+        else:
+            with self.rds_manager:
+                self.rds_manager.update_data(update_dict.keys(), update_dict, 'start_id', start_id, self.table_name)
         update_dict['start_id'] = start_id
 
     def insert_fail_state(self, func_name, fail_id):
