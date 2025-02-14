@@ -139,7 +139,7 @@ class RDSManager:
         insert_query = self.call_update_query(table_name, update_cols, filter_col, filter_val)
         insert_values = [update_dict.get(column) for column in update_cols]
         self.execute_query(insert_query, insert_values)
-        logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', json.dumps(update_cols), start_time)
+        logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', insert_query, start_time)
         pm_logger.db_operation('update', f'{self.db_name}-{table_name}', time.time()-start_time)
 
     def call_select_last_id_query(self, table_name, id_col):
