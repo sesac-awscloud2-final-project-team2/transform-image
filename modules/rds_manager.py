@@ -121,9 +121,13 @@ class RDSManager:
         start_time = time.time()
         insert_query = self.call_insert_query(table_name, insert_cols)
         insert_values = [insert_dict.get(column) for column in insert_cols]
-        self.execute_query(insert_query, insert_values)
-        logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dumps(insert_cols), start_time)
-        pm_logger.db_operation('insert', f'{self.db_name}-{table_name}', time.time()-start_time)
+        try:
+            self.execute_query(insert_query, insert_values)
+            logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dumps(insert_cols), start_time)
+            pm_logger.db_operation('insert', f'{self.db_name}-{table_name}', time.time()-start_time)
+        except psycopg2.errors.UniqueViolation as e:
+            logger.error('insert_data', e)
+            pm_logger.error('insert_data')
 
     def call_update_query(self, table_name, columns, filter_col, filter_val):
         set_clause = ', '.join([f"{col} = %s" for col in columns])
