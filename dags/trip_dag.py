@@ -53,5 +53,5 @@ def get_running_pod(table_name, batch=10):
                         )
    return PodRun
 
-with DAG('transform_dynamo_to_rds', default_args=default_args, schedule_interval=None) as dag:
+with DAG('dynamo_to_rds_trip', default_args=default_args, schedule_interval=None) as dag:
    tripPodRun = get_running_pod('trip')
