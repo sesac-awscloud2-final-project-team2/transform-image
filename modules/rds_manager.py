@@ -142,28 +142,37 @@ class RDSManager:
         logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', insert_query, start_time)
         pm_logger.db_operation('update', f'{self.db_name}-{table_name}', time.time()-start_time)
 
-    def call_select_last_id_query(self, table_name, id_col):
-        select_query = f"""
-        SELECT *
-        FROM {table_name} 
-        ORDER BY CAST(SUBSTRING({id_col} FROM 2) AS INTEGER) DESC 
-        LIMIT 1
-        """
+    def call_select_last_id_query(self, table_name, id_col, contain_status=False):
+        if contain_status:
+            select_query = f"""
+            SELECT {id_col}, status
+            FROM {table_name} 
+            ORDER BY CAST(SUBSTRING({id_col} FROM 2) AS INTEGER) DESC 
+            LIMIT 1
+            """
+        else:
+            select_query = f"""
+            SELECT {id_col}
+            FROM {table_name} 
+            ORDER BY CAST(SUBSTRING({id_col} FROM 2) AS INTEGER) DESC 
+            LIMIT 1
+            """
         return select_query
     
-    def select_last_id(self, id_col, table_name):
+    def select_last_id(self, id_col, table_name, is_status=False):
         start_time = time.time()
-        id_query = self.call_select_last_id_query(table_name, id_col)
+        id_query = self.call_select_last_id_query(table_name, id_col, is_status)
         result = self.execute_query(id_query, ())
-        # logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(id_col), start_time)
-        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', str(result), start_time)
+        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(id_col), start_time)
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
 
         if len(result) == 0:    
             last_id = None
+            status = None
         else:
             last_id = result[0][0]
-        return last_id
+            status = result[0][1]
+        return last_id, status
     
     def call_select_filter_query(self, table_name, filter_col, filter_val, select_col):
         if select_col == '':

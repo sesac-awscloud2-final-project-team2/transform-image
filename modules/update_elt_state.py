@@ -16,17 +16,22 @@ class ETLStateController:
     
     def start_etl_state(self, batch=100):
         with self.rds_manager:
-            last_end_id = self.rds_manager.select_last_id('end_id', self.table_name)
+            last_end_id, last_status = self.rds_manager.select_last_id('end_id', self.table_name, True)
             if last_end_id == None:
                 last_end_id = self.raw_table_name[0] + '0'
-            start_id = last_end_id[0] + str(int(last_end_id[1:])+1)
-            insert_dict = {
-                "start_id": start_id,
-                "end_id": start_id[0] + str(int(start_id[1:])-1+batch),
-                "status": "start",
-                "created_at": get_current_datetime()
-            }
-            self.rds_manager.insert_data(LOG_COLS, insert_dict, self.table_name)
+            # last status가 'start'(다음거 실행), 'finished'(다음거 실행), 'check needed'(다시 실행)일 수 있음. 
+            if last_status not in ['start', 'finished']:
+                start_id = last_end_id
+                self.update_etl_state(start_id, start_id[0] + str(int(start_id[1:])-1+batch), 'start')
+            else:
+                start_id = last_end_id[0] + str(int(last_end_id[1:])+1)
+                insert_dict = {
+                    "start_id": start_id,
+                    "end_id": start_id[0] + str(int(start_id[1:])-1+batch),
+                    "status": "start",
+                    "created_at": get_current_datetime()
+                }
+                self.rds_manager.insert_data(LOG_COLS, insert_dict, self.table_name)
         return start_id
 
     def update_etl_state(self, start_id, end_id, status):
