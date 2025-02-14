@@ -9,6 +9,12 @@ from modules.load_dynamodb import get_dynamo_data
 from modules.update_elt_state import ETLStateController
 from modules.transform_to_rds import load_insert_function
 
+from modules.custom_log.custom_logger import CustomLogger
+logger = CustomLogger('transform')
+
+from modules.custom_log.prometheus_logger import PrometheusLogger
+pm_logger = PrometheusLogger('transform')
+
 # 인자 파서 설정
 parser = argparse.ArgumentParser(description='ETL 프로세스 실행')
 parser.add_argument('--table_name', type=str, required=True)
@@ -38,6 +44,8 @@ for id_num in range(id_start_num, id_end_num):
         insert_func = load_insert_function(table_name)
         insert_func(data_dict)
     except Exception as e:
+        logger.error('__run__.insert_function', f'No saving data : {prome_label}', e)
+        pm_logger.error('__run__.insert_function')
         etl_state_ctl.insert_fail_state("load_insert_function", idx)
         continue
 
