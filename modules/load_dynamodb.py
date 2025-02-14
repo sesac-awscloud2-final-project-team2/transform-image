@@ -1,4 +1,5 @@
 
+import datetime
 import boto3
 from boto3.dynamodb.conditions import Key
 
@@ -26,8 +27,11 @@ def get_dynamo_data(table_name, idx) -> dict:
 
     items = response['Items']
     logger.dynamodb_operation('get_dynamo_data', 'select', table_name, idx, start_time)
+    duration = (datetime.now() - start_time).total_seconds()
+    pm_logger.db_operation('select', 'dynamodb', duration)
     if len(items) == 0:
         logger.error('get_dynamo_data', f'No Data idx({idx}) in {table_name}')
+        pm_logger.error('get_dynamo_data')
         return {}
     else:
         return items[0]

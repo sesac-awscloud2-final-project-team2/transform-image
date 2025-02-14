@@ -12,10 +12,10 @@ class PrometheusLogger:
                                       ['function_name'], registry=self.registry)
         self.function_duration = Histogram('function_duration_seconds', 'Duration of function calls',
                                            ['function_name'], registry=self.registry)
-        self.api_calls = Counter('api_calls_total', 'Number of API calls', 
-                                 ['endpoint', 'method', 'status'], registry=self.registry)
-        self.api_latency = Histogram('api_latency_seconds', 'Latency of API calls',
-                                     ['endpoint', 'method'], registry=self.registry)
+        self.boto_calls = Counter('api_calls_total', 'Number of API calls', 
+                                 ['func_name', 'aws_service', 'status'], registry=self.registry)
+        self.boto_latency = Histogram('api_latency_seconds', 'Latency of API calls',
+                                     ['func_name', 'aws_service'], registry=self.registry)
         self.db_operations = Counter('db_operations_total', 'Number of database operations',
                                      ['operation', 'database'], registry=self.registry)
         self.db_operation_duration = Histogram('db_operation_duration_seconds', 'Duration of database operations',
@@ -47,9 +47,9 @@ class PrometheusLogger:
     def time_function(self, function_name):
         return self.FunctionTimer(self, function_name)
 
-    def api_call(self, endpoint, method, status_code, response_time):
-        self.api_calls.labels(endpoint=endpoint, method=method, status=status_code).inc()
-        self.api_latency.labels(endpoint=endpoint, method=method).observe(response_time)
+    def boto_call(self, func_name, aws_service, status_code, response_time):
+        self.boto_calls.labels(func_name=func_name, aws_service=aws_service, status=status_code).inc()
+        self.boto_latency.labels(func_name=func_name, aws_service=aws_service).observe(response_time)
 
     def db_operation(self, operation, database, duration):
         self.db_operations.labels(operation=operation, database=database).inc()

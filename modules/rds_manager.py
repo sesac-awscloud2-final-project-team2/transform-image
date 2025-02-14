@@ -26,6 +26,7 @@ class RDSManager:
         rds_client = self.session.client('rds', region_name=self.region_name)
         response = rds_client.describe_db_instances()
         logger.boto_call('get_rds_info', 'rds', response['ResponseMetadata']['HTTPStatusCode'], time.time()-start_time)
+        pm_logger.boto_call('get_rds_info', 'rds', response['ResponseMetadata']['HTTPStatusCode'], time.time()-start_time)
 
         info_dict = {}
         if response['DBInstances']:
@@ -36,7 +37,8 @@ class RDSManager:
                     info_dict['port'] = db_instance['Endpoint']['Port']
                     info_dict['db_name'] = db_instance['DBName'] if self.db_name == '' else self.db_name
         else:
-            logger.error('get_rds_info', 'No DBInstances')
+            logger.error('get_rds_info', 'No DBInstances', str(e))
+            pm_logger.error('get_rds_info')
 
         return info_dict
 
@@ -57,9 +59,11 @@ class RDSManager:
                 secret = response['SecretBinary'].decode('utf-8')
             secret_dict = json.loads(secret)
             logger.boto_call('get_rds_secret', 'secrets manager', response['ResponseMetadata']['HTTPStatusCode'], time.time()-start_time)
+            pm_logger.boto_call('get_rds_secret', 'secrets manager', response['ResponseMetadata']['HTTPStatusCode'], time.time()-start_time)
             return secret_dict
         except ClientError as e:
             logger.error('get_rds_secret', "Can't call secrets.", str(e))
+            pm_logger.error('get_rds_secret')
             raise e
 
     def __enter__(self):
@@ -119,6 +123,7 @@ class RDSManager:
         insert_values = [insert_dict.get(column) for column in insert_cols]
         self.execute_query(insert_query, insert_values)
         logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dump(insert_dict), start_time)
+        pm_logger.db_operation('insert', f'{self.db_name}-{table_name}', time.time()-start_time)
 
     def call_update_query(self, table_name, columns, filter_col, filter_val):
         set_clause = ', '.join([f"{col} = %s" for col in columns])
@@ -135,6 +140,7 @@ class RDSManager:
         insert_values = [update_dict.get(column) for column in update_cols]
         self.execute_query(insert_query, insert_values)
         logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', json.dump(update_cols), start_time)
+        pm_logger.db_operation('update', f'{self.db_name}-{table_name}', time.time()-start_time)
 
     def call_select_last_id_query(self, table_name, id_col):
         select_query = f"""
@@ -150,6 +156,8 @@ class RDSManager:
         id_query = self.call_select_last_id_query(table_name, id_col)
         result = self.execute_query(id_query, ())
         logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dump(id_col), start_time)
+        pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
+
         if len(result) == 0:
             last_id = None
         else:
@@ -171,4 +179,5 @@ class RDSManager:
         filter_query = self.call_select_filter_query(table_name, filter_col, filter_val, select_col)
         filter_result = self.execute_query(filter_query, ())
         logger.rds_operation('select_filter', 'select', f'{self.db_name}-{table_name}', f'{json.dump(filter_col)}-{json.dump(filter_val)}', start_time)
+        pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
         return filter_result
