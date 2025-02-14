@@ -144,7 +144,7 @@ class RDSManager:
 
     def call_select_last_id_query(self, table_name, id_col):
         select_query = f"""
-        SELECT * 
+        SELECT *
         FROM {table_name} 
         ORDER BY CAST(SUBSTRING({id_col} FROM 2) AS INTEGER) DESC 
         LIMIT 1
@@ -157,8 +157,8 @@ class RDSManager:
         result = self.execute_query(id_query, ())
         logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(id_col), start_time)
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
-        logger.debug('select_last_id', f'{result}')
-        
+        logger.error('select_last_id', f'{result}')
+
         if len(result) == 0:    
             last_id = None
         else:
