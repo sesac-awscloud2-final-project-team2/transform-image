@@ -16,7 +16,10 @@ from airflow import DAG
 from datetime import datetime
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
-TAG_VERSION = ""
+import os
+from dotenv import load_dotenv
+load_dotenv("dags/.env")
+TAG_VERSION = os.getenv('TAG_VERSION')
 
 default_args = {
    'owner': 'aws',
@@ -51,8 +54,4 @@ def get_running_pod(table_name, batch=10):
    return PodRun
 
 with DAG('transform_dynamo_to_rds', default_args=default_args, schedule_interval=None) as dag:
-   joinPodRun = get_running_pod('user')
    tripPodRun = get_running_pod('trip')
-   experiecnePodRun = get_running_pod('experience')
-
-   joinPodRun >> tripPodRun >> experiecnePodRun

@@ -93,7 +93,7 @@ pipeline {
         stage('Update Airflow DAG') { 
             steps {
                 sh """
-                sed -i 's|TAG_VERSION = ".*"|TAG_VERSION = "${IMAGE_TAG}"|' transform_dag.py
+                sed -i 's|TAG_VERSION = ".*"|TAG_VERSION = "${IMAGE_TAG}"|' dags/.env
                 """
                 echo 'DAG 파일의 이미지 태그를 수정하였습니다.'
             }
@@ -103,7 +103,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${CREDENTIAL_ID}"]]) {
-                        sh "aws s3 cp transform_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/.env ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/join_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/trip_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
+                        sh "aws s3 cp dags/experience_dag.py ${S3_BUCKET} --region ${AWS_DEFAULT_REGION}"
                     }
                     echo "DAG 파일을 S3에 업로드하였습니다."
                 }
