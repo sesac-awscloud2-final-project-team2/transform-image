@@ -72,7 +72,7 @@ class CustomLogger:
         })
 
     def dynamodb_operation(self, func_name, operation, table, items_affected, start_time):
-        duration = (datetime.now() - start_time).total_seconds()
+        duration = time.time() - start_time
         self._log_with_context("info", func_name, "DynamoDB Operation", {
             "operation": operation,
             "table": table,
@@ -81,7 +81,7 @@ class CustomLogger:
         })
 
     def rds_operation(self, func_name, operation, database, items_affected, start_time):
-        duration = (datetime.now() - start_time).total_seconds()
+        duration = time.time() - start_time
         self._log_with_context("info", func_name, "RDS Operation", {
             "operation": operation,
             "database": database,
@@ -90,7 +90,7 @@ class CustomLogger:
         })
         
     def data_processing(self, func_name, data_type, count, start_time):
-        duration = (datetime.now() - start_time).total_seconds()
+        duration = time.time() - start_time
         self._log_with_context("info", func_name, "Data Processing", {
             "data_type": data_type,
             "count": count,
