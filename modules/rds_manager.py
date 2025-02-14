@@ -156,7 +156,7 @@ class RDSManager:
         id_query = self.call_select_last_id_query(table_name, id_col)
         result = self.execute_query(id_query, ())
         # logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(id_col), start_time)
-        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(result), start_time)
+        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', str(result), start_time)
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
 
         if len(result) == 0:    
