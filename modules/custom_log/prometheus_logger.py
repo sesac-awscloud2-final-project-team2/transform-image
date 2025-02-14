@@ -1,29 +1,31 @@
-from prometheus_client import Counter, Histogram
+from prometheus_client import Counter, Histogram, CollectorRegistry
 import time
 
 class PrometheusLogger:
     def __init__(self, job_name):
         self.job_name = job_name
 
+        self.registry = CollectorRegistry()
+
         # 메트릭 정의
         self.function_calls = Counter('function_calls_t', 'Number of function calls', 
-                                      ['function_name'])
+                                      ['function_name'], registry=self.registry)
         self.function_duration = Histogram('function_duration_seconds', 'Duration of function calls',
-                                           ['function_name'])
+                                           ['function_name'], registry=self.registry)
         self.api_calls = Counter('api_calls_total', 'Number of API calls', 
-                                 ['endpoint', 'method', 'status'])
+                                 ['endpoint', 'method', 'status'], registry=self.registry)
         self.api_latency = Histogram('api_latency_seconds', 'Latency of API calls',
-                                     ['endpoint', 'method'])
+                                     ['endpoint', 'method'], registry=self.registry)
         self.db_operations = Counter('db_operations_total', 'Number of database operations',
-                                     ['operation', 'database'])
+                                     ['operation', 'database'], registry=self.registry)
         self.db_operation_duration = Histogram('db_operation_duration_seconds', 'Duration of database operations',
-                                               ['operation', 'database'])
+                                               ['operation', 'database'], registry=self.registry)
         self.data_processed = Counter('data_processed_total', 'Amount of data processed',
-                                      ['data_type'])
+                                      ['data_type'], registry=self.registry)
         self.errors = Counter('errors_total', 'Number of errors', 
-                              ['function_name'])
+                              ['function_name'], registry=self.registry)
         self.warnings = Counter('warnings_total', 'Number of warnings', 
-                                ['function_name'])
+                                ['function_name'], registry=self.registry)
 
     class FunctionTimer:
         def __init__(self, logger, function_name):
