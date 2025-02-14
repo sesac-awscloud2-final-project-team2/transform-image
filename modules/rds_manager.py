@@ -126,7 +126,7 @@ class RDSManager:
             logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dumps(insert_cols), start_time)
             pm_logger.db_operation('insert', f'{self.db_name}-{table_name}', time.time()-start_time)
         except psycopg2.errors.UniqueViolation as e:
-            logger.error('insert_data', e)
+            logger.error('insert_data', str(e))
             pm_logger.error('insert_data')
             pass
 
