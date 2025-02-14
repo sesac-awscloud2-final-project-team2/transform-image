@@ -27,7 +27,7 @@ def get_dynamo_data(table_name, idx) -> dict:
 
     items = response['Items']
     logger.dynamodb_operation('get_dynamo_data', 'select', table_name, idx, start_time)
-    duration = (datetime.now() - start_time).total_seconds()
+    duration = time.time() - start_time
     pm_logger.db_operation('select', 'dynamodb', duration)
     if len(items) == 0:
         logger.error('get_dynamo_data', f'No Data idx({idx}) in {table_name}')
