@@ -64,10 +64,9 @@ class CustomLogger:
     def time_function(self, func_name):
         return self.FunctionTimer(self, func_name)
 
-    def api_call(self, func_name, endpoint, method, status_code, response_time):
+    def boto_call(self, func_name, aws_service, status_code, response_time):
         self._log_with_context("info", func_name, "API Call", {
-            "endpoint": endpoint,
-            "method": method,
+            "aws_service": aws_service,
             "status_code": status_code,
             "response_time_ms": response_time
         })

@@ -2,6 +2,12 @@
 import boto3
 from boto3.dynamodb.conditions import Key
 
+from modules.custom_log.custom_logger import CustomLogger, time
+logger = CustomLogger('transform')
+
+from modules.custom_log.prometheus_logger import PrometheusLogger
+pm_logger = PrometheusLogger('transform')
+
 region_name = "ap-northeast-2"
 
 # DynamoDB 클라이언트 생성
@@ -11,6 +17,7 @@ dynamodb = boto3.resource(
 )
 
 def get_dynamo_data(table_name, idx) -> dict:
+    start_time = time.time()
     table = dynamodb.Table(table_name)
 
     response = table.query(
@@ -18,7 +25,9 @@ def get_dynamo_data(table_name, idx) -> dict:
     )
 
     items = response['Items']
+    logger.dynamodb_operation('get_dynamo_data', 'select', table_name, idx, start_time)
     if len(items) == 0:
+        logger.error('get_dynamo_data', f'No Data idx({idx}) in {table_name}')
         return {}
     else:
         return items[0]

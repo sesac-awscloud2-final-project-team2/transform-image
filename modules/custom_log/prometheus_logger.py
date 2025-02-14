@@ -8,7 +8,7 @@ class PrometheusLogger:
         self.registry = CollectorRegistry()
 
         # 메트릭 정의
-        self.function_calls = Counter('function_calls_t', 'Number of function calls', 
+        self.function_calls = Counter('function_calls_total', 'Number of function calls', 
                                       ['function_name'], registry=self.registry)
         self.function_duration = Histogram('function_duration_seconds', 'Duration of function calls',
                                            ['function_name'], registry=self.registry)

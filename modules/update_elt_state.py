@@ -7,12 +7,6 @@ from modules.rds_manager import RDSManager
 from modules.utils import get_current_datetime
 from modules.__config__ import DB_ID, DB_SECRET_NAME
 
-from modules.custom_log.custom_logger import CustomLogger
-logger = CustomLogger('transform')
-
-from modules.custom_log.prometheus_logger import PrometheusLogger
-pm_logger = PrometheusLogger('transform')
-
 class ETLStateController:
     def __init__(self, raw_table_name, is_proxy=True) -> None:
         self.raw_table_name = raw_table_name
