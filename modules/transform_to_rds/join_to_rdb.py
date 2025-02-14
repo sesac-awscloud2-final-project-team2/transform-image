@@ -5,8 +5,13 @@ from modules.rds_manager import RDSManager
 
 from modules.__config__ import DB_ID, DB_SECRET_NAME
 from modules.__config__ import USER_COLS
-# from modules.custom_log.custom_logger import CustomLogger
-# logger = CustomLogger('transform')
+
+from modules.custom_log.custom_logger import CustomLogger
+logger = CustomLogger('transform')
+
+from modules.custom_log.prometheus_logger import PrometheusLogger
+pm_logger = PrometheusLogger('transform')
+
 
 def insert_join_user(user_dict):
     table_name = 'users'

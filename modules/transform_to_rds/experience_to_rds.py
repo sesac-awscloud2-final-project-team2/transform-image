@@ -8,7 +8,12 @@ from modules.__config__ import DB_ID, DB_SECRET_NAME
 from modules.__config__ import EXP_COLS, PLACE_COLS, PHOTO_COLS
 
 from modules.utils import get_current_datetime
-# from modules.custom_log.custom_logger import CustomLogger
+
+from modules.custom_log.custom_logger import CustomLogger
+logger = CustomLogger('transform')
+
+from modules.custom_log.prometheus_logger import PrometheusLogger
+pm_logger = PrometheusLogger('transform')
 
 
 def insert_place_info(exp_dict):

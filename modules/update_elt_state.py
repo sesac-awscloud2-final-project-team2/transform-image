@@ -3,12 +3,15 @@
 LOG_COLS = ['start_id', 'end_id', 'status', 'created_at', 'updated_at']
 DB_NAME = 'loggingdb'
 
-from modules.custom_log.custom_logger import CustomLogger
-logger = CustomLogger('transform')
-
 from modules.rds_manager import RDSManager
 from modules.utils import get_current_datetime
 from modules.__config__ import DB_ID, DB_SECRET_NAME
+
+from modules.custom_log.custom_logger import CustomLogger
+logger = CustomLogger('transform')
+
+from modules.custom_log.prometheus_logger import PrometheusLogger
+pm_logger = PrometheusLogger('transform')
 
 class ETLStateController:
     def __init__(self, raw_table_name, is_proxy=True) -> None:
@@ -22,7 +25,6 @@ class ETLStateController:
         return last_end_id
     
     def start_etl_state(self, batch=100):
-        start_time = logger.start('start_etl_state')
         last_end_id = self.load_last_end_id()
         if last_end_id == None:
             last_end_id = self.raw_table_name[0] + '0'
@@ -35,12 +37,9 @@ class ETLStateController:
         }
         with self.rds_manager:
             self.rds_manager.insert_data(LOG_COLS, insert_dict, self.table_name)
-        logger.rds_operation("start_etl_state", 'insert', self.table_name, 1, start_time)
-        logger.finish('start_etl_state')
         return start_id
 
     def update_etl_state(self, start_id, end_id, status):
-        start_time = logger.start('update_etl_state')
         update_dict = {
             'end_id':end_id,
             'status':status,
@@ -49,11 +48,8 @@ class ETLStateController:
         with self.rds_manager:
             self.rds_manager.update_data(update_dict.keys(), update_dict, 'start_id', start_id, self.table_name)
         update_dict['start_id'] = start_id
-        logger.rds_operation("update_etl_state", 'update', self.table_name, 1, start_time)
-        logger.finish('update_etl_state')
 
     def insert_fail_state(self, func_name, fail_id):
-        start_time = logger.start('insert_fail_state')
         fail_info_dict = {
             'func_name':func_name,
             'start_id':fail_id,
@@ -63,6 +59,4 @@ class ETLStateController:
         }
         with self.rds_manager:
             self.rds_manager.insert_data(LOG_COLS, fail_info_dict, self.table_name)
-        logger.rds_operation('insert_fail_state', 'insert', self.table_name, 1, start_time)
-        logger.finish('insert_fail_state')
 

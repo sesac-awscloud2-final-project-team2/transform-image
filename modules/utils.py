@@ -18,7 +18,6 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 
-
 def get_secret(): 
     secret_name = "transform_to_rds"
     region_name = "ap-northeast-2"
