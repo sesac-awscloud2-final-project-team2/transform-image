@@ -6,7 +6,7 @@ class PrometheusLogger:
         self.job_name = job_name
 
         # 메트릭 정의
-        self.function_calls = Counter('function_calls_total', 'Number of function calls', 
+        self.function_calls = Counter('function_calls_t', 'Number of function calls', 
                                       ['function_name'])
         self.function_duration = Histogram('function_duration_seconds', 'Duration of function calls',
                                            ['function_name'])
