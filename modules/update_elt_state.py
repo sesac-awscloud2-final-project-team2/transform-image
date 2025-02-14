@@ -14,7 +14,8 @@ class ETLStateController:
         self.rds_manager = RDSManager(DB_ID, DB_SECRET_NAME, is_proxy=is_proxy, db_name=DB_NAME)
     
     def load_last_end_id(self):
-        last_end_id = self.rds_manager.select_last_id('end_id', self.table_name)
+        with self.rds_manager:
+            last_end_id = self.rds_manager.select_last_id('end_id', self.table_name)
         return last_end_id
     
     def start_etl_state(self, batch=100):
@@ -44,6 +45,7 @@ class ETLStateController:
 
     def insert_fail_state(self, func_name, fail_id):
         with self.rds_manager:
+
             fail_info_dict = {
                 'func_name':func_name,
                 'start_id':fail_id,
