@@ -18,7 +18,7 @@ from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperato
 
 import os
 from dotenv import load_dotenv
-load_dotenv("dags/.env")
+load_dotenv("dags/tag_version")
 TAG_VERSION = os.getenv('TAG_VERSION')
 
 default_args = {
