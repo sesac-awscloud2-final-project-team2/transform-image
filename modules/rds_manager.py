@@ -122,7 +122,7 @@ class RDSManager:
         insert_query = self.call_insert_query(table_name, insert_cols)
         insert_values = [insert_dict.get(column) for column in insert_cols]
         self.execute_query(insert_query, insert_values)
-        logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dump(insert_dict), start_time)
+        logger.rds_operation('insert_data', 'insert', f'{self.db_name}-{table_name}', json.dumps(insert_dict), start_time)
         pm_logger.db_operation('insert', f'{self.db_name}-{table_name}', time.time()-start_time)
 
     def call_update_query(self, table_name, columns, filter_col, filter_val):
@@ -139,7 +139,7 @@ class RDSManager:
         insert_query = self.call_update_query(table_name, update_cols, filter_col, filter_val)
         insert_values = [update_dict.get(column) for column in update_cols]
         self.execute_query(insert_query, insert_values)
-        logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', json.dump(update_cols), start_time)
+        logger.rds_operation('update_data', 'update', f'{self.db_name}-{table_name}', json.dumps(update_cols), start_time)
         pm_logger.db_operation('update', f'{self.db_name}-{table_name}', time.time()-start_time)
 
     def call_select_last_id_query(self, table_name, id_col):
@@ -155,7 +155,7 @@ class RDSManager:
         start_time = time.time()
         id_query = self.call_select_last_id_query(table_name, id_col)
         result = self.execute_query(id_query, ())
-        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dump(id_col), start_time)
+        logger.rds_operation('select_last_id', 'select', f'{self.db_name}-{table_name}', json.dumps(id_col), start_time)
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
 
         if len(result) == 0:
@@ -178,6 +178,6 @@ class RDSManager:
         start_time = time.time()
         filter_query = self.call_select_filter_query(table_name, filter_col, filter_val, select_col)
         filter_result = self.execute_query(filter_query, ())
-        logger.rds_operation('select_filter', 'select', f'{self.db_name}-{table_name}', f'{json.dump(filter_col)}-{json.dump(filter_val)}', start_time)
+        logger.rds_operation('select_filter', 'select', f'{self.db_name}-{table_name}', f'{json.dumps(filter_col)}-{json.dumps(filter_val)}', start_time)
         pm_logger.db_operation('select', f'{self.db_name}-{table_name}', time.time()-start_time)
         return filter_result
