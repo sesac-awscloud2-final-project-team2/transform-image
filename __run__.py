@@ -52,7 +52,7 @@ for id_num in range(id_start_num, id_end_num):
         etl_state_ctl.insert_fail_state("load_insert_function", idx)
         continue
 
-if fail_cnt == 0:
-    etl_state_ctl.update_etl_state(start_id, idx, 'finished')
-else:
-    etl_state_ctl.update_etl_state(start_id, idx, 'check needed')
+# if fail_cnt == 0:
+etl_state_ctl.update_etl_state(start_id, idx, 'finished')
+# else:
+#     etl_state_ctl.update_etl_state(start_id, idx, 'check needed')
